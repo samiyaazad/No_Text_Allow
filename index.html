@@ -3,175 +3,138 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ultimate Text-Free Visual Story</title>
+<title>Boba Olympics Ultimate</title>
 <style>
-/* ===== Reset & Basics ===== */
-* { margin:0; padding:0; box-sizing:border-box; }
-body, html { height:100%; width:100%; overflow-x:hidden; scroll-behavior:smooth; }
-.scene { height:100vh; width:100%; position:relative; display:flex; justify-content:center; align-items:flex-end; overflow:hidden; }
-.parallax { position:absolute; width:100%; height:100%; top:0; left:0; overflow:hidden; }
+*{margin:0;padding:0;box-sizing:border-box;}
+body,html{height:100%;width:100%;overflow-x:hidden;scroll-behavior:smooth;background:#000;}
+.scene{height:100vh;width:100%;position:relative;display:flex;justify-content:center;align-items:flex-end;overflow:hidden;opacity:0;transition:opacity 1s ease;}
+.scene.active{opacity:1;}
 
-/* ===== Coin Counter ===== */
-#coin-counter { position:fixed; top:20px; right:20px; width:50px; height:50px; background:gold; border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:18px; z-index:20; box-shadow:0 0 10px #ffaa00; }
+/* Coin Counter & Reward */
+#coin-counter{position:fixed;top:20px;right:20px;width:50px;height:50px;background:gold;border-radius:50%;display:flex;justify-content:center;align-items:center;font-weight:bold;font-size:18px;z-index:50;box-shadow:0 0 10px #ffaa00;}
+#reward{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);width:200px;height:200px;background:gold;border-radius:50%;box-shadow:0 0 30px #ffaa00,0 0 60px #ffcc00;z-index:40;transition:transform 0.5s;pointer-events:none;}
+#reward.show{transform:translate(-50%,-50%) scale(1);animation:burst 1s ease forwards;}
+@keyframes burst{0%{transform:translate(-50%,-50%) scale(0.5);opacity:0;}50%{transform:translate(-50%,-50%) scale(1.2);opacity:1;}100%{transform:translate(-50%,-50%) scale(1);opacity:1;}}
 
-/* ===== Morning Scene ===== */
-#morning { background: linear-gradient(to top, #fffae3, #ffe680); }
-.sun { width:150px; height:150px; background:yellow; border-radius:50%; position:absolute; top:150px; left:50%; transform:translateX(-50%); animation:rise 10s infinite alternate; z-index:1; }
-@keyframes rise {0%{top:150px;}100%{top:50px;}}
-.breakfast { width:60px; height:60px; background:#f4c542; border-radius:50%; position:absolute; bottom:100px; left:40%; transition: transform 0.5s; z-index:2; }
+/* Confetti & Particles */
+.confetti{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--color);top:-10px;z-index:30;opacity:0.9;animation:fall 3s linear forwards;}
+@keyframes fall{0%{top:-10px;transform:rotate(0deg);}100%{top:100%;transform:rotate(720deg);}}
+.particle{width:6px;height:6px;border-radius:50%;position:absolute;background:yellow;opacity:0.8;animation:particleMove 0.5s forwards;}
+@keyframes particleMove{0%{opacity:1;transform:translate(0,0);}100%{opacity:0;transform:translate(calc(20px - 10px), -20px);}}
 
-/* ===== Adventure Scene ===== */
-#adventure { background: linear-gradient(to top, #cceeff, #66ccff); overflow:hidden; }
-.hills { width:120%; height:200px; background:#66ff66; position:absolute; bottom:0; border-radius:50% 50% 0 0; z-index:1; transform:translateX(-10%); }
-.objects div { width:50px; height:50px; background:#ff6666; border-radius:50%; position:absolute; bottom:120px; cursor:pointer; transition: transform 0.3s; z-index:2; }
-.objects div:nth-child(1){left:30%;} .objects div:nth-child(2){left:60%;} .objects div:nth-child(3){left:45%;} .objects div:nth-child(4){left:70%;}
+/* Scenes Backgrounds */
+#morning{background:linear-gradient(to top,#fffae3,#ffe680);}
+#adventure{background:linear-gradient(to top,#cceeff,#66ccff);overflow:hidden;}
+#evening{background:linear-gradient(to top,#ffccdd,#aa88ff);}
+#sleep{background:linear-gradient(to top,#001144,#334466);}
 
-/* Floating clouds */
-.cloud { width:100px; height:60px; background:white; border-radius:50%; position:absolute; top:50px; animation:floatCloud 30s linear infinite; opacity:0.8; }
-.cloud:nth-child(1){left:-100px; animation-delay:0s;}
-.cloud:nth-child(2){left:-200px; animation-delay:10s;}
-@keyframes floatCloud {0%{left:-120px;}100%{left:120%;}}
+/* Morning Elements */
+.sun{width:150px;height:150px;background:yellow;border-radius:50%;position:absolute;top:150px;left:50%;transform:translateX(-50%);animation:rise 10s infinite alternate;z-index:1;}
+@keyframes rise{0%{top:150px;}100%{top:50px;}}
+.breakfast{width:60px;height:60px;background:#f4c542;border-radius:50%;position:absolute;bottom:100px;left:40%;transition:transform 0.5s;z-index:2;}
 
-/* ===== Evening Scene ===== */
-#evening { background: linear-gradient(to top, #ffccdd, #aa88ff); }
-.fireflies div { width:15px; height:15px; background:yellow; border-radius:50%; position:absolute; animation:glow 3s infinite alternate; z-index:2; }
-.fireflies div:nth-child(1){top:30%;left:40%; animation-delay:0s;} 
-.fireflies div:nth-child(2){top:50%;left:60%; animation-delay:1s;} 
-@keyframes glow {0%{opacity:0.2; transform:translateY(0);} 100%{opacity:1; transform:translateY(-10px);}}
+/* Adventure Scene Hills & Clouds */
+.hills{width:120%;height:200px;background:#66ff66;position:absolute;bottom:0;border-radius:50% 50% 0 0;z-index:1;transform:translateX(-10%);}
+.cloud{width:100px;height:60px;background:white;border-radius:50%;position:absolute;top:50px;animation:floatCloud 30s linear infinite;opacity:0.8;}
+.cloud:nth-child(1){left:-100px;animation-delay:0s;}
+.cloud:nth-child(2){left:-200px;animation-delay:10s;}
+@keyframes floatCloud{0%{left:-120px;}100%{left:120%;}}
 
-/* ===== Sleep Scene ===== */
-#sleep { background: linear-gradient(to top, #001144, #334466); }
-.moon { width:100px; height:100px; background:#ffffaa; border-radius:50%; position:absolute; top:50px; left:80%; animation:floatMoon 10s infinite alternate; z-index:1; }
-@keyframes floatMoon {0%{top:50px;}100%{top:80px;}}
-.stars div { width:10px; height:10px; background:white; border-radius:50%; position:absolute; opacity:0.8; animation:twinkle 2s infinite alternate; z-index:2;}
-.stars div:nth-child(1){top:20%;left:20%; animation-delay:0s;}
-.stars div:nth-child(2){top:40%;left:70%; animation-delay:1s;}
-.stars div:nth-child(3){top:60%;left:40%; animation-delay:2s;}
-@keyframes twinkle {0%{opacity:0.2; transform:scale(1);} 100%{opacity:1; transform:scale(1.5);}}
+/* Evening Fireflies */
+.fireflies div{width:15px;height:15px;background:yellow;border-radius:50%;position:absolute;animation:glow 3s infinite alternate;z-index:2;}
+.fireflies div:nth-child(1){top:30%;left:40%;animation-delay:0s;}
+.fireflies div:nth-child(2){top:50%;left:60%;animation-delay:1s;}
+@keyframes glow{0%{opacity:0.2;transform:translateY(0);}100%{opacity:1;transform:translateY(-10px);}}
 
-/* ===== Character ===== */
-.character { width:80px; height:80px; background:#ff6f61; border-radius:50%; position:absolute; bottom:50px; left:50%; transform:translateX(-50%); cursor:pointer; transition: transform 1s; z-index:3; }
+/* Sleep Scene Moon & Stars */
+.moon{width:100px;height:100px;background:#ffffaa;border-radius:50%;position:absolute;top:50px;left:80%;animation:floatMoon 10s infinite alternate;z-index:1;}
+@keyframes floatMoon{0%{top:50px;}100%{top:30px;}}
+.stars div{width:10px;height:10px;background:white;border-radius:50%;position:absolute;opacity:0.8;animation:twinkle 2s infinite alternate;z-index:2;}
+.stars div:nth-child(1){top:20%;left:20%;animation-delay:0s;}
+.stars div:nth-child(2){top:40%;left:70%;animation-delay:1s;}
+.stars div:nth-child(3){top:60%;left:40%;animation-delay:2s;}
+@keyframes twinkle{0%{opacity:0.2;transform:scale(1);}100%{opacity:1;transform:scale(1.5);}}
 
-/* ===== Scroll Transition Effects ===== */
-.scene { opacity:0; transition: opacity 1s ease; }
-.scene.active { opacity:1; }
+/* Character */
+.character{width:80px;height:80px;background:#ff6f61;border-radius:50%;position:absolute;bottom:50px;left:50%;transform:translateX(-50%);cursor:pointer;transition:transform 0.5s;z-index:3;}
+.character.dance{animation:dance 1s infinite alternate;}
+@keyframes dance{0%{transform:translateX(-50%) translateY(0) rotate(0deg);}100%{transform:translateX(-50%) translateY(-20px) rotate(20deg);}}
 
-/* ===== Object Hover Effects ===== */
-.objects div:hover { transform: translateY(-20px) scale(1.2); }
-.breakfast:hover { transform: scale(1.3); }
-
-/* ===== End Reward Animation ===== */
-#reward { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) scale(0); width:150px; height:150px; background:gold; border-radius:50%; box-shadow:0 0 30px #ffaa00,0 0 60px #ffcc00; z-index:30; transition: transform 0.5s; pointer-events:none; }
-#reward.show { transform:translate(-50%,-50%) scale(1); animation:burst 1s ease forwards; }
-@keyframes burst {0%{transform:translate(-50%,-50%) scale(0.5); opacity:0;}50%{transform:translate(-50%,-50%) scale(1.2); opacity:1;}100%{transform:translate(-50%,-50%) scale(1); opacity:1;}}
+/* Coins */
+.coin{width:50px;height:50px;background:#ff6666;border-radius:50%;position:absolute;bottom:120px;cursor:pointer;z-index:3;transition:transform 0.2s;}
 </style>
 </head>
 <body>
 
-<!-- Coin Counter -->
 <div id="coin-counter">0</div>
 <div id="reward"></div>
 
-<!-- Morning Scene -->
+<!-- Morning -->
 <section id="morning" class="scene">
-  <div class="parallax sun"></div>
-  <div class="parallax breakfast"></div>
+  <div class="sun"></div>
+  <div class="breakfast"></div>
   <div class="character"></div>
 </section>
 
-<!-- Adventure Scene -->
+<!-- Adventure Level 1 -->
 <section id="adventure" class="scene">
-  <div class="parallax hills"></div>
+  <div class="hills"></div>
   <div class="cloud"></div>
   <div class="cloud"></div>
-  <div class="objects">
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>
   <div class="character"></div>
 </section>
 
-<!-- Evening Scene -->
+<!-- Evening -->
 <section id="evening" class="scene">
   <div class="fireflies">
-    <div></div>
-    <div></div>
+    <div></div><div></div>
   </div>
   <div class="character"></div>
 </section>
 
-<!-- Sleep Scene -->
+<!-- Sleep -->
 <section id="sleep" class="scene">
-  <div class="parallax moon"></div>
+  <div class="moon"></div>
   <div class="stars">
-    <div></div>
-    <div></div>
-    <div></div>
+    <div></div><div></div><div></div>
   </div>
   <div class="character"></div>
 </section>
 
-<!-- Audio -->
 <audio id="coin-sound" src="https://freesound.org/data/previews/66/66717_931655-lq.mp3"></audio>
 
 <script>
-// ===== Activate scenes on scroll =====
+// Scroll activation
 const scenes = document.querySelectorAll('.scene');
-function checkScene() {
-  const triggerBottom = window.innerHeight / 1.2;
-  scenes.forEach(scene => {
-    const sceneTop = scene.getBoundingClientRect().top;
-    if(sceneTop < triggerBottom){
-      scene.classList.add('active');
-    } else {
-      scene.classList.remove('active');
-    }
-  });
-}
-window.addEventListener('scroll', checkScene);
-checkScene();
+function checkScene(){const trigger=window.innerHeight/1.2;scenes.forEach(s=>s.classList.toggle('active',s.getBoundingClientRect().top<trigger));}
+window.addEventListener('scroll',checkScene);checkScene();
 
-// ===== Character interactivity =====
-document.querySelectorAll('.character').forEach(char => {
-  char.addEventListener('click', () => {
-    char.style.transform = 'translateX(200px)';
-  });
-});
+// Coin game
+const adventure = document.getElementById('adventure');
+let coins=0;
+const coinCounter=document.getElementById('coin-counter');
+const reward=document.getElementById('reward');
+const coinSound=document.getElementById('coin-sound');
+const character=adventure.querySelector('.character');
 
-// ===== Adventure objects & coin collection =====
-let coins = 0;
-const coinDisplay = document.getElementById('coin-counter');
-const reward = document.getElementById('reward');
-const coinSound = document.getElementById('coin-sound');
+function spawnConfetti(){for(let i=0;i<50;i++){const conf=document.createElement('div');conf.className='confetti';conf.style.setProperty('--color',['#ff3','red','#0f0','#0ff','#f0f'][Math.floor(Math.random()*5)]);conf.style.left=Math.random()*100+'vw';conf.style.animationDuration=(2+Math.random()*2)+'s';document.body.appendChild(conf);setTimeout(()=>conf.remove(),3000);}}
 
-document.querySelectorAll('#adventure .objects div').forEach(obj => {
-  obj.addEventListener('click', () => {
-    coins += 1;
-    coinDisplay.textContent = coins;
-    obj.style.transform = 'translateY(-50px) rotate(20deg) scale(1.3)';
-    obj.style.opacity = 0;
-    setTimeout(() => { obj.style.display = 'none'; }, 500);
-    coinSound.currentTime = 0;
-    coinSound.play();
+function spawnParticle(x,y){for(let i=0;i<5;i++){const p=document.createElement('div');p.className='particle';p.style.left=x+'px';p.style.top=y+'px';document.body.appendChild(p);setTimeout(()=>p.remove(),500);}}
 
-    // Show reward if all 4 coins collected
-    if(coins === 4){
-      reward.classList.add('show');
-      setTimeout(()=>{ reward.classList.remove('show'); }, 1500);
-    }
-  });
-});
+function createCoin(){const coin=document.createElement('div');coin.classList.add('coin');coin.style.left=Math.random()*80+'vw';coin.style.bottom=100+Math.random()*50+'px';adventure.appendChild(coin);let direction=Math.random()<0.5?-1:1;let pos=parseFloat(coin.style.left);const interval=setInterval(()=>{pos+=direction;if(pos<0||pos>80) direction*=-1;coin.style.left=pos+'vw';},50);coin.addEventListener('click',()=>{coins+=1;coinCounter.textContent=coins;coin.remove();coinSound.currentTime=0;coinSound.play();spawnParticle(coin.offsetLeft,coin.offsetTop);if(coins===4){reward.classList.add('show');character.classList.add('dance');spawnConfetti();setTimeout(()=>{reward.classList.remove('show');},1500);setTimeout(()=>{character.classList.remove('dance');},2000);spawnLevel2();}clearInterval(interval);});}
 
-// ===== Breakfast hover effect =====
-document.querySelector('.breakfast').addEventListener('mouseover', () => {
-  document.querySelector('.breakfast').style.transform = 'scale(1.3)';
-});
-document.querySelector('.breakfast').addEventListener('mouseout', () => {
-  document.querySelector('.breakfast').style.transform = 'scale(1)';
-});
+// Level 1 coins
+for(let i=0;i<4;i++) createCoin();
+
+// Level 2 Adventure after Level1
+function spawnLevel2(){for(let i=0;i<6;i++){createCoinLevel2();}}
+function createCoinLevel2(){const coin=document.createElement('div');coin.classList.add('coin');coin.style.left=Math.random()*80+'vw';coin.style.bottom=100+Math.random()*50+'px';adventure.appendChild(coin);let direction=Math.random()<0.5?-1:1;let pos=parseFloat(coin.style.left);const interval=setInterval(()=>{pos+=direction*1.5;if(pos<0||pos>80) direction*=-1;coin.style.left=pos+'vw';},50);coin.addEventListener('click',()=>{coins+=1;coinCounter.textContent=coins;coin.remove();coinSound.currentTime=0;coinSound.play();spawnParticle(coin.offsetLeft,coin.offsetTop);if(coins>=10){reward.classList.add('show');character.classList.add('dance');spawnConfetti();spawnConfetti();setTimeout(()=>{reward.classList.remove('show');},2000);setTimeout(()=>{character.classList.remove('dance');},2500);}clearInterval(interval);});}
+
+// Morning hover
+const breakfast=document.querySelector('.breakfast');
+breakfast.addEventListener('mouseover',()=>{breakfast.style.transform='scale(1.3)';});
+breakfast.addEventListener('mouseout',()=>{breakfast.style.transform='scale(1)';});
+
 </script>
-
 </body>
 </html>

@@ -3,39 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Boba Olympics Ultimate</title>
+<title>Boba Olympics Final</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body,html{height:100%;width:100%;overflow-x:hidden;scroll-behavior:smooth;background:#000;}
+body,html{height:100%;width:100%;overflow-x:hidden;scroll-behavior:smooth;background:#000;font-family:sans-serif;}
 .scene{height:100vh;width:100%;position:relative;display:flex;justify-content:center;align-items:flex-end;overflow:hidden;opacity:0;transition:opacity 1s ease;}
-.scene.active{opacity:1;}
+.scene.active{opacity:1;transition:opacity 1s ease;}
 
-/* Coin Counter & Reward */
-#coin-counter{position:fixed;top:20px;right:20px;width:50px;height:50px;background:gold;border-radius:50%;display:flex;justify-content:center;align-items:center;font-weight:bold;font-size:18px;z-index:50;box-shadow:0 0 10px #ffaa00;}
+/* Coin Counter */
+#coin-counter{position:fixed;top:20px;right:20px;width:50px;height:50px;background:gold;border-radius:50%;display:flex;justify-content:center;align-items:center;font-weight:bold;font-size:20px;z-index:50;box-shadow:0 0 15px #ffaa00;}
+
+/* Reward & Confetti */
 #reward{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);width:200px;height:200px;background:gold;border-radius:50%;box-shadow:0 0 30px #ffaa00,0 0 60px #ffcc00;z-index:40;transition:transform 0.5s;pointer-events:none;}
 #reward.show{transform:translate(-50%,-50%) scale(1);animation:burst 1s ease forwards;}
 @keyframes burst{0%{transform:translate(-50%,-50%) scale(0.5);opacity:0;}50%{transform:translate(-50%,-50%) scale(1.2);opacity:1;}100%{transform:translate(-50%,-50%) scale(1);opacity:1;}}
-
-/* Confetti & Particles */
-.confetti{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--color);top:-10px;z-index:30;opacity:0.9;animation:fall 3s linear forwards;}
+.confetti{position:fixed;width:12px;height:12px;border-radius:50%;background:var(--color);top:-10px;z-index:30;opacity:0.9;animation:fall 3s linear forwards;}
 @keyframes fall{0%{top:-10px;transform:rotate(0deg);}100%{top:100%;transform:rotate(720deg);}}
-.particle{width:6px;height:6px;border-radius:50%;position:absolute;background:yellow;opacity:0.8;animation:particleMove 0.5s forwards;}
+.particle{width:8px;height:8px;border-radius:50%;position:absolute;background:yellow;opacity:0.9;animation:particleMove 0.5s forwards;}
 @keyframes particleMove{0%{opacity:1;transform:translate(0,0);}100%{opacity:0;transform:translate(calc(20px - 10px), -20px);}}
 
-/* Scenes Backgrounds */
+/* Scenes */
 #morning{background:linear-gradient(to top,#fffae3,#ffe680);}
-#adventure{background:linear-gradient(to top,#cceeff,#66ccff);overflow:hidden;}
+#adventure{background:linear-gradient(to top,#cceeff,#66ccff);}
 #evening{background:linear-gradient(to top,#ffccdd,#aa88ff);}
 #sleep{background:linear-gradient(to top,#001144,#334466);}
 
-/* Morning Elements */
+/* Morning */
 .sun{width:150px;height:150px;background:yellow;border-radius:50%;position:absolute;top:150px;left:50%;transform:translateX(-50%);animation:rise 10s infinite alternate;z-index:1;}
 @keyframes rise{0%{top:150px;}100%{top:50px;}}
-.breakfast{width:60px;height:60px;background:#f4c542;border-radius:50%;position:absolute;bottom:100px;left:40%;transition:transform 0.5s;z-index:2;}
+.breakfast{width:60px;height:60px;background:#f4c542;border-radius:50%;position:absolute;bottom:100px;left:40%;transition:transform 0.5s;z-index:2;cursor:pointer;}
 
-/* Adventure Scene Hills & Clouds */
+/* Adventure */
 .hills{width:120%;height:200px;background:#66ff66;position:absolute;bottom:0;border-radius:50% 50% 0 0;z-index:1;transform:translateX(-10%);}
-.cloud{width:100px;height:60px;background:white;border-radius:50%;position:absolute;top:50px;animation:floatCloud 30s linear infinite;opacity:0.8;}
+.cloud{width:120px;height:70px;background:white;border-radius:50%;position:absolute;top:50px;animation:floatCloud 30s linear infinite;opacity:0.8;}
 .cloud:nth-child(1){left:-100px;animation-delay:0s;}
 .cloud:nth-child(2){left:-200px;animation-delay:10s;}
 @keyframes floatCloud{0%{left:-120px;}100%{left:120%;}}
@@ -46,7 +46,7 @@ body,html{height:100%;width:100%;overflow-x:hidden;scroll-behavior:smooth;backgr
 .fireflies div:nth-child(2){top:50%;left:60%;animation-delay:1s;}
 @keyframes glow{0%{opacity:0.2;transform:translateY(0);}100%{opacity:1;transform:translateY(-10px);}}
 
-/* Sleep Scene Moon & Stars */
+/* Sleep */
 .moon{width:100px;height:100px;background:#ffffaa;border-radius:50%;position:absolute;top:50px;left:80%;animation:floatMoon 10s infinite alternate;z-index:1;}
 @keyframes floatMoon{0%{top:50px;}100%{top:30px;}}
 .stars div{width:10px;height:10px;background:white;border-radius:50%;position:absolute;opacity:0.8;animation:twinkle 2s infinite alternate;z-index:2;}
@@ -55,13 +55,14 @@ body,html{height:100%;width:100%;overflow-x:hidden;scroll-behavior:smooth;backgr
 .stars div:nth-child(3){top:60%;left:40%;animation-delay:2s;}
 @keyframes twinkle{0%{opacity:0.2;transform:scale(1);}100%{opacity:1;transform:scale(1.5);}}
 
-/* Character */
+/* Character & Coins */
 .character{width:80px;height:80px;background:#ff6f61;border-radius:50%;position:absolute;bottom:50px;left:50%;transform:translateX(-50%);cursor:pointer;transition:transform 0.5s;z-index:3;}
 .character.dance{animation:dance 1s infinite alternate;}
 @keyframes dance{0%{transform:translateX(-50%) translateY(0) rotate(0deg);}100%{transform:translateX(-50%) translateY(-20px) rotate(20deg);}}
-
-/* Coins */
 .coin{width:50px;height:50px;background:#ff6666;border-radius:50%;position:absolute;bottom:120px;cursor:pointer;z-index:3;transition:transform 0.2s;}
+
+/* Bonus bounce */
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-15px);}}
 </style>
 </head>
 <body>
@@ -76,7 +77,7 @@ body,html{height:100%;width:100%;overflow-x:hidden;scroll-behavior:smooth;backgr
   <div class="character"></div>
 </section>
 
-<!-- Adventure Level 1 -->
+<!-- Adventure Level -->
 <section id="adventure" class="scene">
   <div class="hills"></div>
   <div class="cloud"></div>
@@ -104,12 +105,12 @@ body,html{height:100%;width:100%;overflow-x:hidden;scroll-behavior:smooth;backgr
 <audio id="coin-sound" src="https://freesound.org/data/previews/66/66717_931655-lq.mp3"></audio>
 
 <script>
-// Scroll activation
+// Scene fade in on scroll
 const scenes = document.querySelectorAll('.scene');
 function checkScene(){const trigger=window.innerHeight/1.2;scenes.forEach(s=>s.classList.toggle('active',s.getBoundingClientRect().top<trigger));}
 window.addEventListener('scroll',checkScene);checkScene();
 
-// Coin game
+// Coin mini-game
 const adventure = document.getElementById('adventure');
 let coins=0;
 const coinCounter=document.getElementById('coin-counter');
@@ -121,20 +122,59 @@ function spawnConfetti(){for(let i=0;i<50;i++){const conf=document.createElement
 
 function spawnParticle(x,y){for(let i=0;i<5;i++){const p=document.createElement('div');p.className='particle';p.style.left=x+'px';p.style.top=y+'px';document.body.appendChild(p);setTimeout(()=>p.remove(),500);}}
 
-function createCoin(){const coin=document.createElement('div');coin.classList.add('coin');coin.style.left=Math.random()*80+'vw';coin.style.bottom=100+Math.random()*50+'px';adventure.appendChild(coin);let direction=Math.random()<0.5?-1:1;let pos=parseFloat(coin.style.left);const interval=setInterval(()=>{pos+=direction;if(pos<0||pos>80) direction*=-1;coin.style.left=pos+'vw';},50);coin.addEventListener('click',()=>{coins+=1;coinCounter.textContent=coins;coin.remove();coinSound.currentTime=0;coinSound.play();spawnParticle(coin.offsetLeft,coin.offsetTop);if(coins===4){reward.classList.add('show');character.classList.add('dance');spawnConfetti();setTimeout(()=>{reward.classList.remove('show');},1500);setTimeout(()=>{character.classList.remove('dance');},2000);spawnLevel2();}clearInterval(interval);});}
+function createCoin(level=1){
+  const coin=document.createElement('div');
+  coin.classList.add('coin');
+  coin.style.left=Math.random()*80+'vw';
+  coin.style.bottom=100+Math.random()*50+'px';
+  adventure.appendChild(coin);
+  let direction=Math.random()<0.5?-1:1;
+  let pos=parseFloat(coin.style.left);
+  const speed = level===1?1:2;
+  const interval=setInterval(()=>{
+    pos+=direction*speed;
+    if(pos<0||pos>80) direction*=-1;
+    coin.style.left=pos+'vw';
+  },30);
+  coin.style.animation=`bounce ${0.8-level*0.1}s infinite`;
 
-// Level 1 coins
+  coin.addEventListener('click',()=>{
+    coins+=1;
+    coinCounter.textContent=coins;
+    coin.remove();
+    coinSound.currentTime=0; coinSound.play();
+    spawnParticle(coin.offsetLeft,coin.offsetTop);
+
+    if(coins===4){
+      reward.classList.add('show');
+      character.classList.add('dance');
+      spawnConfetti();
+      setTimeout(()=>{reward.classList.remove('show');},1500);
+      setTimeout(()=>{character.classList.remove('dance');},2000);
+      spawnLevel2();
+    }
+    if(coins>=10){
+      reward.classList.add('show');
+      character.classList.add('dance');
+      spawnConfetti();
+      spawnConfetti();
+      setTimeout(()=>{reward.classList.remove('show');},2000);
+      setTimeout(()=>{character.classList.remove('dance');},2500);
+    }
+    clearInterval(interval);
+  });
+}
+
+// Spawn level 1 coins
 for(let i=0;i<4;i++) createCoin();
 
-// Level 2 Adventure after Level1
-function spawnLevel2(){for(let i=0;i<6;i++){createCoinLevel2();}}
-function createCoinLevel2(){const coin=document.createElement('div');coin.classList.add('coin');coin.style.left=Math.random()*80+'vw';coin.style.bottom=100+Math.random()*50+'px';adventure.appendChild(coin);let direction=Math.random()<0.5?-1:1;let pos=parseFloat(coin.style.left);const interval=setInterval(()=>{pos+=direction*1.5;if(pos<0||pos>80) direction*=-1;coin.style.left=pos+'vw';},50);coin.addEventListener('click',()=>{coins+=1;coinCounter.textContent=coins;coin.remove();coinSound.currentTime=0;coinSound.play();spawnParticle(coin.offsetLeft,coin.offsetTop);if(coins>=10){reward.classList.add('show');character.classList.add('dance');spawnConfetti();spawnConfetti();setTimeout(()=>{reward.classList.remove('show');},2000);setTimeout(()=>{character.classList.remove('dance');},2500);}clearInterval(interval);});}
+// Level 2 coins
+function spawnLevel2(){for(let i=0;i<6;i++) createCoin(2);}
 
 // Morning hover
 const breakfast=document.querySelector('.breakfast');
 breakfast.addEventListener('mouseover',()=>{breakfast.style.transform='scale(1.3)';});
 breakfast.addEventListener('mouseout',()=>{breakfast.style.transform='scale(1)';});
-
 </script>
 </body>
 </html>

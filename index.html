@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Boba Olympics Story</title>
+<title>Boba Olympics Story Fixed</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body,html{height:100%;width:100%;overflow-x:hidden;background:#000;}
@@ -27,14 +27,13 @@ body,html{height:100%;width:100%;overflow-x:hidden;background:#000;}
 #evening{background:linear-gradient(to top,#ffccdd,#aa88ff);}
 #sleep{background:linear-gradient(to top,#001144,#334466);}
 
-/* Character */
+/* Character SVG */
 .character{width:80px;height:80px;position:absolute;bottom:50px;left:50%;transform:translateX(-50%);cursor:pointer;transition:transform 0.5s;z-index:3;}
 .character.dance{animation:dance 1s infinite alternate;}
 @keyframes dance{0%{transform:translateX(-50%) translateY(0) rotate(0deg);}100%{transform:translateX(-50%) translateY(-20px) rotate(20deg);}}
 
 /* Coins */
 .coin{width:50px;height:50px;position:absolute;bottom:120px;cursor:pointer;z-index:3;transition:transform 0.2s;}
-.coin svg{width:100%;height:100%;}
 .coin .hint{width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:15px solid yellow;position:absolute;bottom:55px;left:50%;transform:translateX(-50%);animation:hintBounce 1s infinite alternate;pointer-events:none;}
 @keyframes hintBounce{0%{transform:translateY(0);}100%{transform:translateY(-15px);}}
 
@@ -71,17 +70,38 @@ body,html{height:100%;width:100%;overflow-x:hidden;background:#000;}
 
 <!-- Morning Scene -->
 <section id="morning" class="scene">
-  <img src="https://i.ibb.co/q9TkSMy/sun.png" class="sun">
-  <img src="https://i.ibb.co/2qZr5nV/breakfast.png" class="breakfast">
-  <img src="https://i.ibb.co/2t3C7xV/character.png" class="character">
+  <!-- Sun SVG -->
+  <svg class="sun" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="16" fill="yellow"/>
+  </svg>
+  <!-- Breakfast SVG -->
+  <svg class="breakfast" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="16" fill="#f4c542"/>
+  </svg>
+  <!-- Character SVG -->
+  <svg class="character" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="30" fill="#ff6f61"/>
+    <circle cx="22" cy="24" r="5" fill="#fff"/>
+    <circle cx="42" cy="24" r="5" fill="#fff"/>
+    <circle cx="22" cy="24" r="2" fill="#000"/>
+    <circle cx="42" cy="24" r="2" fill="#000"/>
+    <path d="M22 42 Q32 52 42 42" stroke="#000" stroke-width="3" fill="transparent"/>
+  </svg>
 </section>
 
 <!-- Adventure Scene -->
 <section id="adventure" class="scene">
   <div class="hills"></div>
-  <div class="cloud"><img src="https://i.ibb.co/N3kZ7H2/cloud.png"></div>
-  <div class="cloud"><img src="https://i.ibb.co/N3kZ7H2/cloud.png"></div>
-  <img src="https://i.ibb.co/2t3C7xV/character.png" class="character">
+  <div class="cloud"></div>
+  <div class="cloud"></div>
+  <svg class="character" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="30" fill="#ff6f61"/>
+    <circle cx="22" cy="24" r="5" fill="#fff"/>
+    <circle cx="42" cy="24" r="5" fill="#fff"/>
+    <circle cx="22" cy="24" r="2" fill="#000"/>
+    <circle cx="42" cy="24" r="2" fill="#000"/>
+    <path d="M22 42 Q32 52 42 42" stroke="#000" stroke-width="3" fill="transparent"/>
+  </svg>
 </section>
 
 <!-- Evening Scene -->
@@ -89,22 +109,38 @@ body,html{height:100%;width:100%;overflow-x:hidden;background:#000;}
   <div class="fireflies">
     <div></div><div></div>
   </div>
-  <img src="https://i.ibb.co/2t3C7xV/character.png" class="character">
+  <svg class="character" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="30" fill="#ff6f61"/>
+    <circle cx="22" cy="24" r="5" fill="#fff"/>
+    <circle cx="42" cy="24" r="5" fill="#fff"/>
+    <circle cx="22" cy="24" r="2" fill="#000"/>
+    <circle cx="42" cy="24" r="2" fill="#000"/>
+    <path d="M22 42 Q32 52 42 42" stroke="#000" stroke-width="3" fill="transparent"/>
+  </svg>
 </section>
 
 <!-- Sleep Scene -->
 <section id="sleep" class="scene">
-  <img src="https://i.ibb.co/bvx7m0P/moon.png" class="moon">
+  <svg class="moon" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="30" fill="#ffffaa"/>
+  </svg>
   <div class="stars">
     <div></div><div></div><div></div>
   </div>
-  <img src="https://i.ibb.co/2t3C7xV/character.png" class="character">
+  <svg class="character" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="30" fill="#ff6f61"/>
+    <circle cx="22" cy="24" r="5" fill="#fff"/>
+    <circle cx="42" cy="24" r="5" fill="#fff"/>
+    <circle cx="22" cy="24" r="2" fill="#000"/>
+    <circle cx="42" cy="24" r="2" fill="#000"/>
+    <path d="M22 42 Q32 52 42 42" stroke="#000" stroke-width="3" fill="transparent"/>
+  </svg>
 </section>
 
 <audio id="coin-sound" src="https://freesound.org/data/previews/66/66717_931655-lq.mp3"></audio>
 
 <script>
-// Coin Game with Image Hints
+// Coin Game with SVG hints
 let coins=0;
 const coinCounter=document.getElementById('coin-counter');
 const reward=document.getElementById('reward');
@@ -141,10 +177,11 @@ function createCoin(level=1){
   coin.style.left=Math.random()*80+'vw';
   coin.style.bottom=120+Math.random()*50+'px';
 
-  // Coin Image
-  const img=document.createElement('img');
-  img.src='https://i.ibb.co/ZVqfQmt/coin.png';
-  coin.appendChild(img);
+  // Coin SVG
+  const svg=document.createElementNS("http://www.w3.org/2000/svg",'svg');
+  svg.setAttribute('viewBox','0 0 64 64');
+  svg.innerHTML='<circle cx="32" cy="32" r="28" fill="#ffcc00"/>';
+  coin.appendChild(svg);
 
   // Hint arrow
   const hint=document.createElement('div');
@@ -189,16 +226,11 @@ function createCoin(level=1){
   });
 }
 
-// Spawn Level 1 Coins Immediately
+// Spawn Level 1 Coins
 for(let i=0;i<4;i++) createCoin();
 
 // Level 2 Coins
 function spawnLevel2(){for(let i=0;i<6;i++) createCoin(2);}
-
-// Morning Breakfast Hover
-const breakfast=document.querySelector('.breakfast');
-breakfast.addEventListener('mouseover',()=>{breakfast.style.transform='scale(1.3)';});
-breakfast.addEventListener('mouseout',()=>{breakfast.style.transform='scale(1)';});
 </script>
 </body>
 </html>

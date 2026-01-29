@@ -2,58 +2,47 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>No Text Story</title>
+<title>Visual Story</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-:root {
-  --bg-start: #0f2027;
-  --bg-mid: #203a43;
-  --bg-end: #2c5364;
-  --warm: #ffd166;
-  --cool: #6ec1e4;
-  --soft: #f4f1de;
-}
-
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  height: 500vh;
-  background: linear-gradient(var(--bg-start), var(--bg-mid), var(--bg-end));
+  background: #0a0f1f;
   overflow-x: hidden;
 }
 
-/* SCENES */
+/* ---------- SCENE ---------- */
 .scene {
-  position: relative;
   height: 100vh;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: background 1.2s ease;
 }
 
-/* CHARACTERS */
+/* ---------- CHARACTERS ---------- */
 .character {
   width: 90px;
-  height: 160px;
-  border-radius: 24px;
+  height: 150px;
+  border-radius: 26px;
   position: absolute;
   bottom: 120px;
-  animation: breathe 3s ease-in-out infinite;
+  animation: breathe 3.2s ease-in-out infinite;
 }
 
-.a {
-  background: var(--cool);
-  left: 50%;
-  transform: translateX(-50%);
+/* STATES */
+.primary {
+  background: #4ea8de;
 }
 
-.b {
-  background: var(--warm);
-  right: 20%;
+.secondary {
+  background: #ffd166;
   opacity: 0;
 }
 
@@ -64,68 +53,61 @@ body {
   background: #111;
   border-radius: 50%;
   position: absolute;
-  top: 40px;
+  top: 46px;
 }
 
 .eye.left { left: 22px; }
 .eye.right { right: 22px; }
 
-/* ORBS (OBSTACLES / GOALS) */
-.orb {
-  width: 26px;
-  height: 26px;
+/* ---------- OBJECTS ---------- */
+.object {
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  background: var(--soft);
   position: absolute;
-  animation: float 4s linear infinite;
 }
 
-/* GLOW */
-.glow {
-  box-shadow: 0 0 30px rgba(255,255,255,0.6);
+/* CHAOS */
+.threat {
+  background: #ef476f;
+  animation: fall 1.8s linear infinite;
 }
 
-/* ANIMATIONS */
+/* PROGRESS */
+.calm {
+  background: #ffd166;
+  box-shadow: 0 0 22px rgba(255,209,102,0.8);
+}
+
+/* ---------- ANIMATIONS ---------- */
 @keyframes breathe {
   0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  50% { transform: translateY(-9px); }
 }
 
-@keyframes float {
-  from { transform: translateY(100vh); }
-  to { transform: translateY(-100vh); }
+@keyframes fall {
+  from { transform: translateY(-120vh); }
+  to { transform: translateY(120vh); }
 }
 
-/* SCENE-SPECIFIC */
-.scene-1 {
-  background: radial-gradient(circle, #1b2b34, #000);
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  50% { transform: translateX(6px); }
+  75% { transform: translateX(-6px); }
+  100% { transform: translateX(0); }
 }
 
-.scene-2 .orb {
-  left: calc(10% + 80% * var(--x));
-  animation-duration: calc(3s + 3s * var(--d));
+.shake {
+  animation: shake 0.45s;
 }
 
-.scene-3 .b {
-  opacity: 1;
-}
-
-.scene-4 .orb {
-  background: var(--warm);
-}
-
-.scene-5 {
-  background: radial-gradient(circle, #355c7d, #000);
-}
-
-.scene-5 .character {
-  left: 45%;
-}
-
-.scene-5 .b {
-  left: 55%;
-  right: auto;
-}
+/* ---------- SCENE COLORS ---------- */
+.scene-1 { background: #03045e; }
+.scene-2 { background: #370617; }
+.scene-3 { background: #1b4332; }
+.scene-4 { background: #2a9d8f; }
+.scene-5 { background: #f1faee; }
 </style>
 </head>
 
@@ -133,33 +115,32 @@ body {
 
 <!-- SCENE 1: ALONE -->
 <section class="scene scene-1">
-  <div class="character a">
+  <div class="character primary">
     <div class="eye left"></div>
     <div class="eye right"></div>
   </div>
 </section>
 
-<!-- SCENE 2: CHAOS -->
+<!-- SCENE 2: OVERWHELMED -->
 <section class="scene scene-2">
-  <div class="character a">
+  <div class="character primary shake">
     <div class="eye left"></div>
     <div class="eye right"></div>
   </div>
 
-  <!-- Orbs -->
-  <div class="orb" style="--x:0.1;--d:0.2;"></div>
-  <div class="orb" style="--x:0.4;--d:0.6;"></div>
-  <div class="orb" style="--x:0.7;--d:0.4;"></div>
+  <div class="object threat" style="left:20%;"></div>
+  <div class="object threat" style="left:50%; animation-duration:1.4s;"></div>
+  <div class="object threat" style="left:75%; animation-duration:2.2s;"></div>
 </section>
 
 <!-- SCENE 3: ARRIVAL -->
 <section class="scene scene-3">
-  <div class="character a">
+  <div class="character primary" style="left:40%;">
     <div class="eye left"></div>
     <div class="eye right"></div>
   </div>
 
-  <div class="character b">
+  <div class="character secondary" style="right:40%; opacity:1;">
     <div class="eye left"></div>
     <div class="eye right"></div>
   </div>
@@ -167,28 +148,28 @@ body {
 
 <!-- SCENE 4: TOGETHER -->
 <section class="scene scene-4">
-  <div class="character a glow">
+  <div class="character primary" style="left:42%;">
     <div class="eye left"></div>
     <div class="eye right"></div>
   </div>
 
-  <div class="character b glow">
+  <div class="character secondary" style="right:42%; opacity:1;">
     <div class="eye left"></div>
     <div class="eye right"></div>
   </div>
 
-  <div class="orb glow"></div>
-  <div class="orb glow" style="left:60%;"></div>
+  <div class="object calm" style="left:30%;"></div>
+  <div class="object calm" style="left:60%;"></div>
 </section>
 
-<!-- SCENE 5: CALM -->
+<!-- SCENE 5: RESOLUTION -->
 <section class="scene scene-5">
-  <div class="character a glow">
+  <div class="character primary" style="left:45%; box-shadow:0 0 28px rgba(0,0,0,0.25);">
     <div class="eye left"></div>
     <div class="eye right"></div>
   </div>
 
-  <div class="character b glow">
+  <div class="character secondary" style="left:55%; opacity:1; box-shadow:0 0 28px rgba(0,0,0,0.25);">
     <div class="eye left"></div>
     <div class="eye right"></div>
   </div>

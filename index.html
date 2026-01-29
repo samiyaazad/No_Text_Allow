@@ -12,7 +12,7 @@ body {
   height: 100vh;
 }
 
-/* Player bubble */
+/* ---------- PLAYER ---------- */
 #player {
   width: 50px;
   height: 50px;
@@ -21,11 +21,11 @@ body {
   position: absolute;
   top: 80%;
   left: 10%;
-  transition: top 0.05s, left 0.05s;
   box-shadow: 0 0 12px rgba(78,168,222,0.8);
+  transition: top 0.05s, left 0.05s;
 }
 
-/* Safe zone */
+/* ---------- SAFE ZONE ---------- */
 #safe {
   width: 80px;
   height: 80px;
@@ -35,29 +35,42 @@ body {
   top: 10%;
   left: 80%;
   box-shadow: 0 0 25px rgba(62,207,142,0.8);
+  transition: box-shadow 0.3s;
 }
 
-/* Obstacles */
+/* ---------- OBSTACLES ---------- */
 .obstacle {
   width: 50px;
   height: 50px;
   background: #ef476f;
   border-radius: 50%;
   position: absolute;
-  top: 30%;
-  left: 40%;
-  animation: moveX 3s ease-in-out infinite alternate;
 }
 
-.obstacle:nth-child(2) { top: 50%; left: 20%; animation-duration: 4s; }
-.obstacle:nth-child(3) { top: 60%; left: 60%; animation-duration: 2.5s; }
+/* ---------- PARTICLES ---------- */
+.particle {
+  width: 8px;
+  height: 8px;
+  background: #3ecf8e;
+  border-radius: 50%;
+  position: absolute;
+  opacity: 1;
+  pointer-events: none;
+}
 
+/* ---------- ANIMATIONS ---------- */
 @keyframes moveX {
   0% { transform: translateX(0); }
-  100% { transform: translateX(200px); }
+  50% { transform: translateX(var(--rangeX)); }
+  100% { transform: translateX(0); }
 }
 
-/* Win effect */
+@keyframes moveY {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(var(--rangeY)); }
+  100% { transform: translateY(0); }
+}
+
 .win-glow {
   animation: glow 1s infinite alternate;
 }
@@ -68,29 +81,32 @@ body {
 }
 </style>
 </head>
+
 <body>
 
 <div id="player"></div>
 <div id="safe"></div>
-<div class="obstacle"></div>
-<div class="obstacle"></div>
-<div class="obstacle"></div>
+
+<!-- Obstacles -->
+<div class="obstacle" style="top:20%; left:30%; --rangeX:200px; --rangeY:100px; animation: moveX 3s ease-in-out infinite alternate, moveY 2.5s ease-in-out infinite alternate;"></div>
+<div class="obstacle" style="top:50%; left:50%; --rangeX:-180px; --rangeY:120px; animation: moveX 4s ease-in-out infinite alternate, moveY 3s ease-in-out infinite alternate;"></div>
+<div class="obstacle" style="top:70%; left:20%; --rangeX:150px; --rangeY:-80px; animation: moveX 2.5s ease-in-out infinite alternate, moveY 3.5s ease-in-out infinite alternate;"></div>
 
 <script>
 const player = document.getElementById('player');
 const safe = document.getElementById('safe');
 const obstacles = document.querySelectorAll('.obstacle');
 
-let pos = { x: 100, y: window.innerHeight*0.8 }; // starting position
+let pos = { x: 100, y: window.innerHeight*0.8 };
 const speed = 10;
 
+// Movement
 document.addEventListener('keydown', (e)=>{
   if(e.key === "ArrowUp") pos.y -= speed;
   if(e.key === "ArrowDown") pos.y += speed;
   if(e.key === "ArrowLeft") pos.x -= speed;
   if(e.key === "ArrowRight") pos.x += speed;
 
-  // Keep inside viewport
   pos.x = Math.max(0, Math.min(window.innerWidth - 50, pos.x));
   pos.y = Math.max(0, Math.min(window.innerHeight - 50, pos.y));
 
@@ -100,36 +116,67 @@ document.addEventListener('keydown', (e)=>{
   checkCollision();
 });
 
+// Collision detection
 function checkCollision(){
   const playerRect = player.getBoundingClientRect();
   const safeRect = safe.getBoundingClientRect();
 
-  // Check win
+  // Win
   if(playerRect.left < safeRect.right &&
      playerRect.right > safeRect.left &&
      playerRect.top < safeRect.bottom &&
      playerRect.bottom > safeRect.top){
+
        safe.classList.add('win-glow');
        player.style.background = '#3ecf8e';
        player.style.boxShadow = '0 0 25px rgba(62,207,142,0.8)';
+
+       createParticles(playerRect.left + 25, playerRect.top + 25);
   }
 
-  // Check obstacle collision
+  // Obstacle collision
   obstacles.forEach(ob=>{
     const obsRect = ob.getBoundingClientRect();
     if(playerRect.left < obsRect.right &&
        playerRect.right > obsRect.left &&
        playerRect.top < obsRect.bottom &&
        playerRect.bottom > obsRect.top){
-         // Reset player to start
-         pos.x = 100;
-         pos.y = window.innerHeight*0.8;
-         player.style.left = pos.x + "px";
-         player.style.top = pos.y + "px";
-         player.style.background = '#4ea8de';
-         player.style.boxShadow = '0 0 12px rgba(78,168,222,0.8)';
+         resetPlayer();
     }
   });
+}
+
+// Reset
+function resetPlayer(){
+  pos.x = 100;
+  pos.y = window.innerHeight*0.8;
+  player.style.left = pos.x + "px";
+  player.style.top = pos.y + "px";
+  player.style.background = '#4ea8de';
+  player.style.boxShadow = '0 0 12px rgba(78,168,222,0.8)';
+  safe.classList.remove('win-glow');
+}
+
+// Particle effect
+function createParticles(x, y){
+  for(let i=0;i<15;i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    document.body.appendChild(p);
+    p.style.left = x + 'px';
+    p.style.top = y + 'px';
+    const angle = Math.random()*2*Math.PI;
+    const distance = Math.random()*60 + 20;
+    p.animate([
+      { transform: `translate(0,0)`, opacity:1 },
+      { transform: `translate(${Math.cos(angle)*distance}px, ${Math.sin(angle)*distance}px)`, opacity:0 }
+    ],{
+      duration: 800 + Math.random()*400,
+      easing: 'ease-out',
+      fill: 'forwards'
+    });
+    setTimeout(()=>p.remove(), 1200);
+  }
 }
 </script>
 

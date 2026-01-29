@@ -2,178 +2,136 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Visual Story</title>
+<title>Bubble to Safety</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
-* {
-  box-sizing: border-box;
-}
-
 body {
   margin: 0;
-  background: #0a0f1f;
-  overflow-x: hidden;
-}
-
-/* ---------- SCENE ---------- */
-.scene {
+  background: #0a0a1f;
+  overflow: hidden;
   height: 100vh;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: background 1.2s ease;
 }
 
-/* ---------- CHARACTERS ---------- */
-.character {
-  width: 90px;
-  height: 150px;
-  border-radius: 26px;
-  position: absolute;
-  bottom: 120px;
-  animation: breathe 3.2s ease-in-out infinite;
-}
-
-/* STATES */
-.primary {
+/* Player bubble */
+#player {
+  width: 50px;
+  height: 50px;
   background: #4ea8de;
-}
-
-.secondary {
-  background: #ffd166;
-  opacity: 0;
-}
-
-/* EYES */
-.eye {
-  width: 10px;
-  height: 14px;
-  background: #111;
   border-radius: 50%;
   position: absolute;
-  top: 46px;
+  top: 80%;
+  left: 10%;
+  transition: top 0.05s, left 0.05s;
+  box-shadow: 0 0 12px rgba(78,168,222,0.8);
 }
 
-.eye.left { left: 22px; }
-.eye.right { right: 22px; }
-
-/* ---------- OBJECTS ---------- */
-.object {
-  width: 28px;
-  height: 28px;
+/* Safe zone */
+#safe {
+  width: 80px;
+  height: 80px;
+  background: #3ecf8e;
   border-radius: 50%;
   position: absolute;
+  top: 10%;
+  left: 80%;
+  box-shadow: 0 0 25px rgba(62,207,142,0.8);
 }
 
-/* CHAOS */
-.threat {
+/* Obstacles */
+.obstacle {
+  width: 50px;
+  height: 50px;
   background: #ef476f;
-  animation: fall 1.8s linear infinite;
+  border-radius: 50%;
+  position: absolute;
+  top: 30%;
+  left: 40%;
+  animation: moveX 3s ease-in-out infinite alternate;
 }
 
-/* PROGRESS */
-.calm {
-  background: #ffd166;
-  box-shadow: 0 0 22px rgba(255,209,102,0.8);
-}
+.obstacle:nth-child(2) { top: 50%; left: 20%; animation-duration: 4s; }
+.obstacle:nth-child(3) { top: 60%; left: 60%; animation-duration: 2.5s; }
 
-/* ---------- ANIMATIONS ---------- */
-@keyframes breathe {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-9px); }
-}
-
-@keyframes fall {
-  from { transform: translateY(-120vh); }
-  to { transform: translateY(120vh); }
-}
-
-@keyframes shake {
+@keyframes moveX {
   0% { transform: translateX(0); }
-  25% { transform: translateX(-6px); }
-  50% { transform: translateX(6px); }
-  75% { transform: translateX(-6px); }
-  100% { transform: translateX(0); }
+  100% { transform: translateX(200px); }
 }
 
-.shake {
-  animation: shake 0.45s;
+/* Win effect */
+.win-glow {
+  animation: glow 1s infinite alternate;
 }
 
-/* ---------- SCENE COLORS ---------- */
-.scene-1 { background: #03045e; }
-.scene-2 { background: #370617; }
-.scene-3 { background: #1b4332; }
-.scene-4 { background: #2a9d8f; }
-.scene-5 { background: #f1faee; }
+@keyframes glow {
+  0% { box-shadow: 0 0 25px rgba(62,207,142,0.8); }
+  100% { box-shadow: 0 0 60px rgba(62,207,142,1); }
+}
 </style>
 </head>
-
 <body>
 
-<!-- SCENE 1: ALONE -->
-<section class="scene scene-1">
-  <div class="character primary">
-    <div class="eye left"></div>
-    <div class="eye right"></div>
-  </div>
-</section>
+<div id="player"></div>
+<div id="safe"></div>
+<div class="obstacle"></div>
+<div class="obstacle"></div>
+<div class="obstacle"></div>
 
-<!-- SCENE 2: OVERWHELMED -->
-<section class="scene scene-2">
-  <div class="character primary shake">
-    <div class="eye left"></div>
-    <div class="eye right"></div>
-  </div>
+<script>
+const player = document.getElementById('player');
+const safe = document.getElementById('safe');
+const obstacles = document.querySelectorAll('.obstacle');
 
-  <div class="object threat" style="left:20%;"></div>
-  <div class="object threat" style="left:50%; animation-duration:1.4s;"></div>
-  <div class="object threat" style="left:75%; animation-duration:2.2s;"></div>
-</section>
+let pos = { x: 100, y: window.innerHeight*0.8 }; // starting position
+const speed = 10;
 
-<!-- SCENE 3: ARRIVAL -->
-<section class="scene scene-3">
-  <div class="character primary" style="left:40%;">
-    <div class="eye left"></div>
-    <div class="eye right"></div>
-  </div>
+document.addEventListener('keydown', (e)=>{
+  if(e.key === "ArrowUp") pos.y -= speed;
+  if(e.key === "ArrowDown") pos.y += speed;
+  if(e.key === "ArrowLeft") pos.x -= speed;
+  if(e.key === "ArrowRight") pos.x += speed;
 
-  <div class="character secondary" style="right:40%; opacity:1;">
-    <div class="eye left"></div>
-    <div class="eye right"></div>
-  </div>
-</section>
+  // Keep inside viewport
+  pos.x = Math.max(0, Math.min(window.innerWidth - 50, pos.x));
+  pos.y = Math.max(0, Math.min(window.innerHeight - 50, pos.y));
 
-<!-- SCENE 4: TOGETHER -->
-<section class="scene scene-4">
-  <div class="character primary" style="left:42%;">
-    <div class="eye left"></div>
-    <div class="eye right"></div>
-  </div>
+  player.style.left = pos.x + "px";
+  player.style.top = pos.y + "px";
 
-  <div class="character secondary" style="right:42%; opacity:1;">
-    <div class="eye left"></div>
-    <div class="eye right"></div>
-  </div>
+  checkCollision();
+});
 
-  <div class="object calm" style="left:30%;"></div>
-  <div class="object calm" style="left:60%;"></div>
-</section>
+function checkCollision(){
+  const playerRect = player.getBoundingClientRect();
+  const safeRect = safe.getBoundingClientRect();
 
-<!-- SCENE 5: RESOLUTION -->
-<section class="scene scene-5">
-  <div class="character primary" style="left:45%; box-shadow:0 0 28px rgba(0,0,0,0.25);">
-    <div class="eye left"></div>
-    <div class="eye right"></div>
-  </div>
+  // Check win
+  if(playerRect.left < safeRect.right &&
+     playerRect.right > safeRect.left &&
+     playerRect.top < safeRect.bottom &&
+     playerRect.bottom > safeRect.top){
+       safe.classList.add('win-glow');
+       player.style.background = '#3ecf8e';
+       player.style.boxShadow = '0 0 25px rgba(62,207,142,0.8)';
+  }
 
-  <div class="character secondary" style="left:55%; opacity:1; box-shadow:0 0 28px rgba(0,0,0,0.25);">
-    <div class="eye left"></div>
-    <div class="eye right"></div>
-  </div>
-</section>
+  // Check obstacle collision
+  obstacles.forEach(ob=>{
+    const obsRect = ob.getBoundingClientRect();
+    if(playerRect.left < obsRect.right &&
+       playerRect.right > obsRect.left &&
+       playerRect.top < obsRect.bottom &&
+       playerRect.bottom > obsRect.top){
+         // Reset player to start
+         pos.x = 100;
+         pos.y = window.innerHeight*0.8;
+         player.style.left = pos.x + "px";
+         player.style.top = pos.y + "px";
+         player.style.background = '#4ea8de';
+         player.style.boxShadow = '0 0 12px rgba(78,168,222,0.8)';
+    }
+  });
+}
+</script>
 
 </body>
 </html>

@@ -1,180 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Yapper 🌱</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>No Text Story</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: 'Arial', sans-serif;
-    }
+<style>
+:root {
+  --bg-start: #0f2027;
+  --bg-mid: #203a43;
+  --bg-end: #2c5364;
+  --warm: #ffd166;
+  --cool: #6ec1e4;
+  --soft: #f4f1de;
+}
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #ff4b4b, #ff9a9a);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+* {
+  box-sizing: border-box;
+}
 
-    .app {
-      background: #fff;
-      width: 360px;
-      border-radius: 24px;
-      padding: 20px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-      text-align: center;
-    }
+body {
+  margin: 0;
+  height: 500vh;
+  background: linear-gradient(var(--bg-start), var(--bg-mid), var(--bg-end));
+  overflow-x: hidden;
+}
 
-    /* ===== CHARACTER ===== */
-    .character {
-      width: 160px;
-      height: 200px;
-      margin: 0 auto 10px;
-      position: relative;
-      animation: float 3s ease-in-out infinite;
-    }
+/* SCENES */
+.scene {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-    /* HEAD */
-    .head {
-      width: 140px;
-      height: 140px;
-      background: #ffe0bd;
-      border-radius: 50%;
-      position: absolute;
-      top: 0;
-      left: 10px;
-    }
+/* CHARACTERS */
+.character {
+  width: 90px;
+  height: 160px;
+  border-radius: 24px;
+  position: absolute;
+  bottom: 120px;
+  animation: breathe 3s ease-in-out infinite;
+}
 
-    /* EYES */
-    .eye {
-      width: 14px;
-      height: 18px;
-      background: #333;
-      border-radius: 50%;
-      position: absolute;
-      top: 50px;
-      animation: blink 5s infinite;
-    }
+.a {
+  background: var(--cool);
+  left: 50%;
+  transform: translateX(-50%);
+}
 
-    .eye.left { left: 35px; }
-    .eye.right { right: 35px; }
+.b {
+  background: var(--warm);
+  right: 20%;
+  opacity: 0;
+}
 
-    /* MOUTH */
-    .mouth {
-      width: 30px;
-      height: 14px;
-      border-bottom: 4px solid #333;
-      border-radius: 0 0 20px 20px;
-      position: absolute;
-      bottom: 35px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
+/* EYES */
+.eye {
+  width: 10px;
+  height: 14px;
+  background: #111;
+  border-radius: 50%;
+  position: absolute;
+  top: 40px;
+}
 
-    /* BODY */
-    .body {
-      width: 100px;
-      height: 70px;
-      background: #6c8cff;
-      border-radius: 20px;
-      position: absolute;
-      bottom: 0;
-      left: 30px;
-    }
+.eye.left { left: 22px; }
+.eye.right { right: 22px; }
 
-    /* ANIMATIONS */
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-    }
+/* ORBS (OBSTACLES / GOALS) */
+.orb {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--soft);
+  position: absolute;
+  animation: float 4s linear infinite;
+}
 
-    @keyframes blink {
-      0%, 95%, 100% { transform: scaleY(1); }
-      96%, 99% { transform: scaleY(0.1); }
-    }
+/* GLOW */
+.glow {
+  box-shadow: 0 0 30px rgba(255,255,255,0.6);
+}
 
-    /* ===== CHAT ===== */
-    .chat {
-      background: #f4f4f4;
-      border-radius: 14px;
-      padding: 10px;
-      min-height: 60px;
-      margin-bottom: 10px;
-      font-size: 14px;
-    }
+/* ANIMATIONS */
+@keyframes breathe {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
 
-    input {
-      width: 100%;
-      padding: 12px;
-      border-radius: 12px;
-      border: 1px solid #ddd;
-      outline: none;
-      font-size: 14px;
-    }
+@keyframes float {
+  from { transform: translateY(100vh); }
+  to { transform: translateY(-100vh); }
+}
 
-    button {
-      margin-top: 10px;
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 14px;
-      background: #ff4b4b;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-    }
+/* SCENE-SPECIFIC */
+.scene-1 {
+  background: radial-gradient(circle, #1b2b34, #000);
+}
 
-    button:hover {
-      background: #e63b3b;
-    }
-  </style>
+.scene-2 .orb {
+  left: calc(10% + 80% * var(--x));
+  animation-duration: calc(3s + 3s * var(--d));
+}
+
+.scene-3 .b {
+  opacity: 1;
+}
+
+.scene-4 .orb {
+  background: var(--warm);
+}
+
+.scene-5 {
+  background: radial-gradient(circle, #355c7d, #000);
+}
+
+.scene-5 .character {
+  left: 45%;
+}
+
+.scene-5 .b {
+  left: 55%;
+  right: auto;
+}
+</style>
 </head>
 
 <body>
-  <div class="app">
 
-    <!-- CHARACTER -->
-    <div class="character">
-      <div class="head">
-        <div class="eye left"></div>
-        <div class="eye right"></div>
-        <div class="mouth"></div>
-      </div>
-      <div class="body"></div>
-    </div>
+<!-- SCENE 1: ALONE -->
+<section class="scene scene-1">
+  <div class="character a">
+    <div class="eye left"></div>
+    <div class="eye right"></div>
+  </div>
+</section>
 
-    <!-- CHAT -->
-    <div class="chat" id="reply">
-      Hi… I’m here 🌱 You can talk to me.
-    </div>
-
-    <input id="input" placeholder="Type whatever you feel…" />
-    <button onclick="respond()">Send</button>
-
+<!-- SCENE 2: CHAOS -->
+<section class="scene scene-2">
+  <div class="character a">
+    <div class="eye left"></div>
+    <div class="eye right"></div>
   </div>
 
-  <script>
-    function respond() {
-      const input = document.getElementById("input");
-      const reply = document.getElementById("reply");
+  <!-- Orbs -->
+  <div class="orb" style="--x:0.1;--d:0.2;"></div>
+  <div class="orb" style="--x:0.4;--d:0.6;"></div>
+  <div class="orb" style="--x:0.7;--d:0.4;"></div>
+</section>
 
-      if (!input.value.trim()) return;
+<!-- SCENE 3: ARRIVAL -->
+<section class="scene scene-3">
+  <div class="character a">
+    <div class="eye left"></div>
+    <div class="eye right"></div>
+  </div>
 
-      const responses = [
-        "That sounds heavy… I’m listening 💛",
-        "You don’t have to go through that alone 🌱",
-        "It’s okay to feel this way.",
-        "I’m really glad you told me.",
-        "You’re doing your best. I see it."
-      ];
+  <div class="character b">
+    <div class="eye left"></div>
+    <div class="eye right"></div>
+  </div>
+</section>
 
-      reply.innerText = responses[Math.floor(Math.random() * responses.length)];
-      input.value = "";
-    }
-  </script>
+<!-- SCENE 4: TOGETHER -->
+<section class="scene scene-4">
+  <div class="character a glow">
+    <div class="eye left"></div>
+    <div class="eye right"></div>
+  </div>
+
+  <div class="character b glow">
+    <div class="eye left"></div>
+    <div class="eye right"></div>
+  </div>
+
+  <div class="orb glow"></div>
+  <div class="orb glow" style="left:60%;"></div>
+</section>
+
+<!-- SCENE 5: CALM -->
+<section class="scene scene-5">
+  <div class="character a glow">
+    <div class="eye left"></div>
+    <div class="eye right"></div>
+  </div>
+
+  <div class="character b glow">
+    <div class="eye left"></div>
+    <div class="eye right"></div>
+  </div>
+</section>
+
 </body>
 </html>

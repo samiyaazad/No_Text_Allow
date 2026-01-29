@@ -1,236 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Boba Olympics Story Fixed</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body,html{height:100%;width:100%;overflow-x:hidden;background:#000;}
-.scene{height:100vh;width:100%;position:relative;display:flex;justify-content:center;align-items:flex-end;overflow:hidden;}
+  <meta charset="UTF-8" />
+  <title>Yapper 🌱</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-/* Coin Counter */
-#coin-counter{position:fixed;top:20px;right:20px;width:50px;height:50px;background:gold;border-radius:50%;display:flex;justify-content:center;align-items:center;font-weight:bold;font-size:20px;z-index:50;box-shadow:0 0 15px #ffaa00;}
-#reward{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);width:200px;height:200px;background:gold;border-radius:50%;box-shadow:0 0 30px #ffaa00,0 0 60px #ffcc00;z-index:40;transition:transform 0.5s;pointer-events:none;}
-#reward.show{transform:translate(-50%,-50%) scale(1);animation:burst 1s ease forwards;}
-@keyframes burst{0%{transform:translate(-50%,-50%) scale(0.5);opacity:0;}50%{transform:translate(-50%,-50%) scale(1.2);opacity:1;}100%{transform:translate(-50%,-50%) scale(1);opacity:1;}}
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
 
-/* Confetti */
-.confetti{position:fixed;width:12px;height:12px;border-radius:50%;background:var(--color);top:-10px;z-index:30;opacity:0.9;animation:fall 3s linear forwards;}
-@keyframes fall{0%{top:-10px;transform:rotate(0deg);}100%{top:100%;transform:rotate(720deg);}}
-.particle{width:8px;height:8px;border-radius:50%;position:absolute;background:yellow;opacity:0.9;animation:particleMove 0.5s forwards;}
-@keyframes particleMove{0%{opacity:1;transform:translate(0,0);}100%{opacity:0;transform:translate(calc(20px - 10px), -20px);}}
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ff4b4b, #ff9a9a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-/* Backgrounds */
-#morning{background:linear-gradient(to top,#fffae3,#ffe680);}
-#adventure{background:linear-gradient(to top,#cceeff,#66ccff);}
-#evening{background:linear-gradient(to top,#ffccdd,#aa88ff);}
-#sleep{background:linear-gradient(to top,#001144,#334466);}
+    .app {
+      background: #fff;
+      width: 360px;
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+      text-align: center;
+    }
 
-/* Character SVG */
-.character{width:80px;height:80px;position:absolute;bottom:50px;left:50%;transform:translateX(-50%);cursor:pointer;transition:transform 0.5s;z-index:3;}
-.character.dance{animation:dance 1s infinite alternate;}
-@keyframes dance{0%{transform:translateX(-50%) translateY(0) rotate(0deg);}100%{transform:translateX(-50%) translateY(-20px) rotate(20deg);}}
+    /* ===== CHARACTER ===== */
+    .character {
+      width: 160px;
+      height: 200px;
+      margin: 0 auto 10px;
+      position: relative;
+      animation: float 3s ease-in-out infinite;
+    }
 
-/* Coins */
-.coin{width:50px;height:50px;position:absolute;bottom:120px;cursor:pointer;z-index:3;transition:transform 0.2s;}
-.coin .hint{width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:15px solid yellow;position:absolute;bottom:55px;left:50%;transform:translateX(-50%);animation:hintBounce 1s infinite alternate;pointer-events:none;}
-@keyframes hintBounce{0%{transform:translateY(0);}100%{transform:translateY(-15px);}}
+    /* HEAD */
+    .head {
+      width: 140px;
+      height: 140px;
+      background: #ffe0bd;
+      border-radius: 50%;
+      position: absolute;
+      top: 0;
+      left: 10px;
+    }
 
-/* Morning Elements */
-.sun{width:150px;height:150px;position:absolute;top:100px;left:50%;transform:translateX(-50%);}
-.breakfast{width:60px;height:60px;position:absolute;bottom:100px;left:40%;transition:transform 0.5s;cursor:pointer;z-index:2;}
+    /* EYES */
+    .eye {
+      width: 14px;
+      height: 18px;
+      background: #333;
+      border-radius: 50%;
+      position: absolute;
+      top: 50px;
+      animation: blink 5s infinite;
+    }
 
-/* Adventure Hills and Clouds */
-.hills{width:120%;height:200px;background:#66ff66;position:absolute;bottom:0;border-radius:50% 50% 0 0;z-index:1;transform:translateX(-10%);}
-.cloud{width:120px;height:70px;position:absolute;top:50px;animation:floatCloud 30s linear infinite;opacity:0.8;}
-.cloud:nth-child(1){left:-100px;animation-delay:0s;}
-.cloud:nth-child(2){left:-200px;animation-delay:10s;}
-@keyframes floatCloud{0%{left:-120px;}100%{left:120%;}}
+    .eye.left { left: 35px; }
+    .eye.right { right: 35px; }
 
-/* Evening Fireflies */
-.fireflies div{width:15px;height:15px;background:yellow;border-radius:50%;position:absolute;animation:glow 3s infinite alternate;z-index:2;}
-.fireflies div:nth-child(1){top:30%;left:40%;animation-delay:0s;}
-.fireflies div:nth-child(2){top:50%;left:60%;animation-delay:1s;}
-@keyframes glow{0%{opacity:0.2;transform:translateY(0);}100%{opacity:1;transform:translateY(-10px);}}
+    /* MOUTH */
+    .mouth {
+      width: 30px;
+      height: 14px;
+      border-bottom: 4px solid #333;
+      border-radius: 0 0 20px 20px;
+      position: absolute;
+      bottom: 35px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
 
-/* Sleep Moon & Stars */
-.moon{width:100px;height:100px;position:absolute;top:50px;left:80%;}
-.stars div{width:10px;height:10px;background:white;border-radius:50%;position:absolute;opacity:0.8;animation:twinkle 2s infinite alternate;z-index:2;}
-.stars div:nth-child(1){top:20%;left:20%;animation-delay:0s;}
-.stars div:nth-child(2){top:40%;left:70%;animation-delay:1s;}
-.stars div:nth-child(3){top:60%;left:40%;animation-delay:2s;}
-@keyframes twinkle{0%{opacity:0.2;transform:scale(1);}100%{opacity:1;transform:scale(1.5);}}
-</style>
+    /* BODY */
+    .body {
+      width: 100px;
+      height: 70px;
+      background: #6c8cff;
+      border-radius: 20px;
+      position: absolute;
+      bottom: 0;
+      left: 30px;
+    }
+
+    /* ANIMATIONS */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @keyframes blink {
+      0%, 95%, 100% { transform: scaleY(1); }
+      96%, 99% { transform: scaleY(0.1); }
+    }
+
+    /* ===== CHAT ===== */
+    .chat {
+      background: #f4f4f4;
+      border-radius: 14px;
+      padding: 10px;
+      min-height: 60px;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      outline: none;
+      font-size: 14px;
+    }
+
+    button {
+      margin-top: 10px;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 14px;
+      background: #ff4b4b;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #e63b3b;
+    }
+  </style>
 </head>
+
 <body>
+  <div class="app">
 
-<div id="coin-counter">0</div>
-<div id="reward"></div>
+    <!-- CHARACTER -->
+    <div class="character">
+      <div class="head">
+        <div class="eye left"></div>
+        <div class="eye right"></div>
+        <div class="mouth"></div>
+      </div>
+      <div class="body"></div>
+    </div>
 
-<!-- Morning Scene -->
-<section id="morning" class="scene">
-  <!-- Sun SVG -->
-  <svg class="sun" viewBox="0 0 64 64">
-    <circle cx="32" cy="32" r="16" fill="yellow"/>
-  </svg>
-  <!-- Breakfast SVG -->
-  <svg class="breakfast" viewBox="0 0 64 64">
-    <circle cx="32" cy="32" r="16" fill="#f4c542"/>
-  </svg>
-  <!-- Character SVG -->
-  <svg class="character" viewBox="0 0 64 64">
-    <circle cx="32" cy="32" r="30" fill="#ff6f61"/>
-    <circle cx="22" cy="24" r="5" fill="#fff"/>
-    <circle cx="42" cy="24" r="5" fill="#fff"/>
-    <circle cx="22" cy="24" r="2" fill="#000"/>
-    <circle cx="42" cy="24" r="2" fill="#000"/>
-    <path d="M22 42 Q32 52 42 42" stroke="#000" stroke-width="3" fill="transparent"/>
-  </svg>
-</section>
+    <!-- CHAT -->
+    <div class="chat" id="reply">
+      Hi… I’m here 🌱 You can talk to me.
+    </div>
 
-<!-- Adventure Scene -->
-<section id="adventure" class="scene">
-  <div class="hills"></div>
-  <div class="cloud"></div>
-  <div class="cloud"></div>
-  <svg class="character" viewBox="0 0 64 64">
-    <circle cx="32" cy="32" r="30" fill="#ff6f61"/>
-    <circle cx="22" cy="24" r="5" fill="#fff"/>
-    <circle cx="42" cy="24" r="5" fill="#fff"/>
-    <circle cx="22" cy="24" r="2" fill="#000"/>
-    <circle cx="42" cy="24" r="2" fill="#000"/>
-    <path d="M22 42 Q32 52 42 42" stroke="#000" stroke-width="3" fill="transparent"/>
-  </svg>
-</section>
+    <input id="input" placeholder="Type whatever you feel…" />
+    <button onclick="respond()">Send</button>
 
-<!-- Evening Scene -->
-<section id="evening" class="scene">
-  <div class="fireflies">
-    <div></div><div></div>
   </div>
-  <svg class="character" viewBox="0 0 64 64">
-    <circle cx="32" cy="32" r="30" fill="#ff6f61"/>
-    <circle cx="22" cy="24" r="5" fill="#fff"/>
-    <circle cx="42" cy="24" r="5" fill="#fff"/>
-    <circle cx="22" cy="24" r="2" fill="#000"/>
-    <circle cx="42" cy="24" r="2" fill="#000"/>
-    <path d="M22 42 Q32 52 42 42" stroke="#000" stroke-width="3" fill="transparent"/>
-  </svg>
-</section>
 
-<!-- Sleep Scene -->
-<section id="sleep" class="scene">
-  <svg class="moon" viewBox="0 0 64 64">
-    <circle cx="32" cy="32" r="30" fill="#ffffaa"/>
-  </svg>
-  <div class="stars">
-    <div></div><div></div><div></div>
-  </div>
-  <svg class="character" viewBox="0 0 64 64">
-    <circle cx="32" cy="32" r="30" fill="#ff6f61"/>
-    <circle cx="22" cy="24" r="5" fill="#fff"/>
-    <circle cx="42" cy="24" r="5" fill="#fff"/>
-    <circle cx="22" cy="24" r="2" fill="#000"/>
-    <circle cx="42" cy="24" r="2" fill="#000"/>
-    <path d="M22 42 Q32 52 42 42" stroke="#000" stroke-width="3" fill="transparent"/>
-  </svg>
-</section>
+  <script>
+    function respond() {
+      const input = document.getElementById("input");
+      const reply = document.getElementById("reply");
 
-<audio id="coin-sound" src="https://freesound.org/data/previews/66/66717_931655-lq.mp3"></audio>
+      if (!input.value.trim()) return;
 
-<script>
-// Coin Game with SVG hints
-let coins=0;
-const coinCounter=document.getElementById('coin-counter');
-const reward=document.getElementById('reward');
-const coinSound=document.getElementById('coin-sound');
-const adventure=document.getElementById('adventure');
-const character=adventure.querySelector('.character');
+      const responses = [
+        "That sounds heavy… I’m listening 💛",
+        "You don’t have to go through that alone 🌱",
+        "It’s okay to feel this way.",
+        "I’m really glad you told me.",
+        "You’re doing your best. I see it."
+      ];
 
-function spawnConfetti(){
-  for(let i=0;i<50;i++){
-    const conf=document.createElement('div');
-    conf.className='confetti';
-    conf.style.setProperty('--color',['#ff3','red','#0f0','#0ff','#f0f'][Math.floor(Math.random()*5)]);
-    conf.style.left=Math.random()*100+'vw';
-    conf.style.animationDuration=(2+Math.random()*2)+'s';
-    document.body.appendChild(conf);
-    setTimeout(()=>conf.remove(),3000);
-  }
-}
-
-function spawnParticle(x,y){
-  for(let i=0;i<5;i++){
-    const p=document.createElement('div');
-    p.className='particle';
-    p.style.left=x+'px';
-    p.style.top=y+'px';
-    document.body.appendChild(p);
-    setTimeout(()=>p.remove(),500);
-  }
-}
-
-function createCoin(level=1){
-  const coin=document.createElement('div');
-  coin.classList.add('coin');
-  coin.style.left=Math.random()*80+'vw';
-  coin.style.bottom=120+Math.random()*50+'px';
-
-  // Coin SVG
-  const svg=document.createElementNS("http://www.w3.org/2000/svg",'svg');
-  svg.setAttribute('viewBox','0 0 64 64');
-  svg.innerHTML='<circle cx="32" cy="32" r="28" fill="#ffcc00"/>';
-  coin.appendChild(svg);
-
-  // Hint arrow
-  const hint=document.createElement('div');
-  hint.classList.add('hint');
-  coin.appendChild(hint);
-
-  adventure.appendChild(coin);
-  let direction=Math.random()<0.5?-1:1;
-  let pos=parseFloat(coin.style.left);
-  const speed = level===1?1:2;
-  const interval=setInterval(()=>{
-    pos+=direction*speed;
-    if(pos<0||pos>80) direction*=-1;
-    coin.style.left=pos+'vw';
-  },30);
-  coin.style.animation=`bounce ${0.8-level*0.1}s infinite`;
-
-  coin.addEventListener('click',()=>{
-    coins+=1;
-    coinCounter.textContent=coins;
-    coin.remove();
-    coinSound.currentTime=0; coinSound.play();
-    spawnParticle(coin.offsetLeft,coin.offsetTop);
-
-    if(coins===4){
-      reward.classList.add('show');
-      character.classList.add('dance');
-      spawnConfetti();
-      setTimeout(()=>{reward.classList.remove('show');},1500);
-      setTimeout(()=>{character.classList.remove('dance');},2000);
-      spawnLevel2();
+      reply.innerText = responses[Math.floor(Math.random() * responses.length)];
+      input.value = "";
     }
-    if(coins>=10){
-      reward.classList.add('show');
-      character.classList.add('dance');
-      spawnConfetti();
-      spawnConfetti();
-      setTimeout(()=>{reward.classList.remove('show');},2000);
-      setTimeout(()=>{character.classList.remove('dance');},2500);
-    }
-    clearInterval(interval);
-  });
-}
-
-// Spawn Level 1 Coins
-for(let i=0;i<4;i++) createCoin();
-
-// Level 2 Coins
-function spawnLevel2(){for(let i=0;i<6;i++) createCoin(2);}
-</script>
+  </script>
 </body>
 </html>
